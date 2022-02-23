@@ -15,5 +15,8 @@ params = {
   leverage: 100,
 }.merge(api_key: api_key)
 
-signature = get_signature(URI.encode_www_form(params.sort), secret)
+# Don't use URI.encode_www_form. "," should not be encoded before getting hexdigeest
+query_string = params.sort.map { |k, v| "#{k}=#{v}" }.join('&')
+
+signature = get_signature(query_string, secret)
 puts signature
